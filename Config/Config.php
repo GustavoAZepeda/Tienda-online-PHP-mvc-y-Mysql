@@ -1,6 +1,6 @@
 <?php
   // URL del proyecto (IP pública del servidor)
-  const BASE_URL = "http://3.142.122.180/";
+  const BASE_URL = "http://3.139.225.165/";
   // Configuración de la base de datos en Amazon RDS
   const HOST = "tienda-youtube.c3saw6o8oztg.us-east-2.rds.amazonaws.com"; // Endpoint de Amazon RDS
   const USER = "admin"; // Usuario de la base de datos
