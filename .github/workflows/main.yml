@@ -1,0 +1,56 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - DEV
+      - QA
+      - master  # Producción ahora está en la rama master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout del código
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Configuración de PHP y dependencias
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'  # Versión de PHP
+          extensions: mbstring, mysqli, pdo_mysql  # Extensiones necesarias
+
+      # Instalar dependencias con Composer
+      - name: Install dependencies
+        run: composer install
+
+      # Ejecutar pruebas unitarias (si tienes PHPUnit)
+      - name: Run tests
+        run: ./vendor/bin/phpunit
+
+      # Despliegue a DEV
+      - name: Deploy to DEV
+        if: github.ref == 'refs/heads/DEV'
+        run: |
+          echo "Deploying to DEV environment"
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa_dev user@dev_server_ip "cd /var/www/dev && git pull origin DEV && composer install"
+          # Reemplaza 'user' por tu usuario en el servidor DEV y 'dev_server_ip' por la IP de tu servidor DEV
+
+      # Despliegue a QA
+      - name: Deploy to QA
+        if: github.ref == 'refs/heads/QA'
+        run: |
+          echo "Deploying to QA environment"
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa_qa user@qa_server_ip "cd /var/www/qa && git pull origin QA && composer install"
+          # Reemplaza 'user' por tu usuario en el servidor QA y 'qa_server_ip' por la IP de tu servidor QA
+
+      # Despliegue a master (Producción)
+      - name: Deploy to master
+        if: github.ref == 'refs/heads/master'
+        run: |
+          echo "Deploying to Production environment"
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa_prod user@prod_server_ip "cd /var/www/html && git pull origin master && composer install"
+          # Reemplaza 'user' por tu usuario en el servidor de producción y 'prod_server_ip' por la IP de tu servidor de producción
