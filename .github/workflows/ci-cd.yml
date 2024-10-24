@@ -36,21 +36,21 @@ jobs:
         if: github.ref == 'refs/heads/DEV'
         run: |
           echo "Deploying to DEV environment"
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa_dev user@dev_server_ip "cd /var/www/dev && git pull origin DEV && composer install"
-          # Reemplaza 'user' por tu usuario en el servidor DEV y 'dev_server_ip' por la IP de tu servidor DEV
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@3.139.225.165 "cd /var/www/dev && git pull origin DEV && composer install"
+          # Asegúrate de que la carpeta /var/www/dev exista en tu servidor para el ambiente DEV
 
       # Despliegue a QA
       - name: Deploy to QA
         if: github.ref == 'refs/heads/QA'
         run: |
           echo "Deploying to QA environment"
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa_qa user@qa_server_ip "cd /var/www/qa && git pull origin QA && composer install"
-          # Reemplaza 'user' por tu usuario en el servidor QA y 'qa_server_ip' por la IP de tu servidor QA
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@3.139.225.165 "cd /var/www/qa && git pull origin QA && composer install"
+          # Asegúrate de que la carpeta /var/www/qa exista en tu servidor para el ambiente QA
 
       # Despliegue a master (Producción)
       - name: Deploy to master
         if: github.ref == 'refs/heads/master'
         run: |
           echo "Deploying to Production environment"
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa_prod user@prod_server_ip "cd /var/www/html && git pull origin master && composer install"
-          # Reemplaza 'user' por tu usuario en el servidor de producción y 'prod_server_ip' por la IP de tu servidor de producción
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@3.139.225.165 "cd /var/www/html && git pull origin master && composer install"
+          # Asegúrate de que la carpeta /var/www/html es tu carpeta de producción
